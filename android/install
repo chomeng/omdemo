@@ -1,0 +1,5 @@
+source ~/.bash_profile
+
+adb uninstall com.omdemo
+
+adb install app/build/outputs/apk/release/app-release.apk

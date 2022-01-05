@@ -1,0 +1,24 @@
+
+一、定时开关机接口：
+说明：
+"android.56iq.intent.action.setpoweronoff"是设置定时开关机的广播接口。
+"timeon"参数是开机的时间数组。
+"timeoff"参数是关机的时间数组。
+"enable"参数不起作用。
+
+ Intent intent1 = new Intent("android.56iq.intent.action.setpoweronoff");
+        int[] timeonArray = {2014,10,1, 8,30}; // 下 次 开 机 具 体 日 期 时 间 ， 即 在
+        //2014/10/1 8:30 会开机
+        int[] timeoffArray = {2014,9,1, 8,30}; //下次关机具体日期时间， 即在 2014/9/1 8:30
+        //会关机
+        intent.putExtra("timeon",timeonArray);
+        intent.putExtra("timeoff",timeoffArray);
+        sendBroadcast(intent);
+		
+
+
+注意事项：
+定时开关机只能设置一组开关机时间。
+如果当前定时开关机广播发送多次，那么只有的最后一次的生效。
+当设置了定时开关机时间后，到点关机了中途断电又上电开机了，那么开机以后要在apk里面去判断一下是否到达开机时间，
+如果没有到达开机时间，且当前时间距离开机时间大于4分钟，则设置定时2分钟以后关机，再设置上次的开机时间点去开机。
