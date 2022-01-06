@@ -1,0 +1,141 @@
+一、定时开关机接口：
+接口使用示例：
+ Intent intent1 = new Intent("android.56iq.intent.action.setpoweronoff");
+        int[] timeonArray = {2014,10,1, 8,30}; // 下 次 开 机 具 体 日 期 时 间 ， 即 在
+        //2014/10/1 8:30 会开机
+        int[] timeoffArray = {2014,9,1, 8,30}; //下次关机具体日期时间， 即在 2014/9/1 8:30
+        //会关机
+        intent.putExtra("timeon",timeonArray);
+        intent.putExtra("timeoff",timeoffArray);
+        intent.putExtra("enable",true); //使能开关机功能，设为false,则为关闭
+        sendBroadcast(intent);
+
+
+说明：
+"android.56iq.intent.action.setpoweronoff"是设置定时开关机的广播接口。
+"timeon"参数是开机的时间数组。
+"timeoff"参数是关机的时间数组。
+"enable"参数不起作用。
+
+注意事项：
+定时开关机只能设置一组开关机时间。
+如果当前定时开关机广播发送多次，那么只有的最后一次的生效。
+当设置了定时开关机时间后，到点关机了中途断电又上电开机了，那么开机以后要在apk里面去判断一下是否到达开机时间，
+如果没有到达开机时间，且当前时间距离开机时间大于4分钟，则设置定时2分钟以后关机，再设置上次的开机时间点去开机。
+
+
+
+二、重启系统接口：
+走关机流程方式
+import android.os.PowerManager;
+import android.content.Context;
+
+PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+pm.reboot(null);
+
+或者直接重启方式
+try {
+Runtime.getRuntime().exec("reboot");
+} catch (Exception e){
+ 
+}
+
+广播方式：
+com.android.yf_reboot
+
+三、截屏接口：
+执行下面这个shell命令就可以了。
+try {
+	String screenshotcmd="screencap -p /sdcard/screen.png";
+	Runtime runtime = Runtime.getRuntime(); 
+	Process proc = runtime.exec(screenshotcmd);
+} catch (Exception e){
+ 
+}
+
+四、开关屏接口：
+直接开关背光的方式
+com.android.lcd_bl_on (开屏背光广播)
+com.android.lcd_bl_off(关屏背光广播)
+
+休眠的方式
+try {
+	String keyPower="input keyevent 26";
+	Runtime runtime = Runtime.getRuntime(); 
+	Process proc = runtime.exec(keyPower);
+} catch (Exception e){
+ 
+}（休眠或唤醒，机器不会进入深度休眠）
+
+
+五、关机接口：
+try {
+Runtime.getRuntime().exec("reboot -p");
+} catch (Exception e){
+ 
+}
+
+广播方式：
+com.android.yf_shutdown
+
+六、设置音量：
+android系统的AudioManager.java提供了接口函数setStreamVolume(int streamType, int index, int flags)
+
+七、OTA升级接口：
+无相关接口；
+ 
+八、外部看门狗操作接口：
+无相关接口；
+
+九、导航栏的隐藏和显示：
+com.allwinner.show_nav_bar （显示广播）
+com.allwinner.hide_nav_bar （隐藏广播）
+
+
+
+十、046G广播
+钱箱广播接口：
+com.android.yf_pull_money_locker
+
+切换hdmi1广播：
+com.android.yf_switch_to_hdmi1
+
+切换hdmi2广播：
+com.android.yf_switch_to_hdmi2
+
+十一、定时重启接口：
+Intent intent1 = new Intent("com.android.yf_reboot");
+intent.putExtra("reboot_time",100);时间单位为秒
+sendBroadcast(intent);
+
+十二、定时重启接口：
+替换开机logo接口：
+Intent intent1 = new Intent("com.android.yf_rebootlogo");
+intent.putExtra("path","/mnt/sdcard/bootlogo.bmp");//图片名称和格式必须是bootlogo.bmp
+sendBroadcast(intent);
+
+十三、替换开机动画接口：
+Intent intent1 = new Intent("com.android.yf_bootanimation");
+intent.putExtra("path","/mnt/sdcard/bootanimation.zip"); //开机动画必须是bootanimation.zip的文件。
+sendBroadcast(intent);
+
+
+十四、设置时间接口：
+Intent intent1 = new Intent("com.android.yf_settime");
+intent.putExtra("hour",0);//小时
+intent.putExtra("minute",0);//分钟
+intent.putExtra("second",0);//秒
+sendBroadcast(intent)
+
+十五、设置日期接口：
+Intent intent1 = new Intent("com.android.yf_setdate");
+intent.putExtra("year",2018);//年份
+intent.putExtra("mon",1);//月份
+intent.putExtra("day",1);//日
+sendBroadcast(intent)
+
+十五、设置是否自动获取时间接口：
+Intent intent1 = new Intent("com.android.yf_setautotime");
+intent.putExtra("state",true);// state值分别是true和false,true表示设置为自动获取时间，false表示关闭自动获取时间。
+sendBroadcast(intent)
+

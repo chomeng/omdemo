@@ -24,31 +24,58 @@ public class DeviceApi {
     public DeviceApi(Activity act) {
         Logc.i("1.构造============202201051343" + act);
         this.activity = act;
+        this.context = act;
         if (activity != null) {
             VolumeManager.getInstance().init(activity, new Handler());
-            PermissionManager.getInstance().requestPermissions(activity, new PermissionManager.OnPermissionListener() {
-                @Override
-                public void onPermission(boolean granted) {
-                    if(granted){
-                        Logc.i("1.requestPermissions.权限成功============" + granted);
-                        SpManager.getInstance().init(activity,"conf");
-                    }else{
-                        Logc.i("1.requestPermissions.权限失败=========" + granted);
-                    }
-                    ScreenBrightnessApi.getApi().allowModifySettings(activity);
-                }
-            });
+            permissionFirst();
             if(getSysStable()){
-                TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        reboot();
-                    }
-                });
+//                TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
+//                    @Override
+//                    public void onReceive(Context context, Intent intent) {
+//                        Logc.e("2.....onReceive");
+//                        reboot();
+//                    }
+//                });
             }else{
                 TaskManager.getInstance().cancel();
             }
         }
+    }
+
+    protected void permissionFirst(){
+        PermissionManager.getInstance().requestPermissions(activity, new PermissionManager.OnPermissionListener() {
+            @Override
+            public void onPermission(boolean granted) {
+                if(granted){
+                    Logc.i("1.requestPermissions.权限成功============" + granted);
+                    SpManager.getInstance().init(activity,"conf");
+                }else{
+                    Logc.i("1.requestPermissions.权限失败=========" + granted);
+                }
+                ScreenBrightnessApi.getApi().allowModifySettings(activity);
+            }
+        });
+    }
+
+    protected void settingFirst(){
+        Logc.i("1.allowModifySettings.settingFirst============");
+        ScreenBrightnessApi.getApi().allowModifySettings(activity, new ScreenBrightnessApi.OnPermissionListener() {
+            @Override
+            public void onPermission(boolean granted) {
+                Logc.i("1.allowModifySettings.权限成功============" + granted);
+                PermissionManager.getInstance().requestPermissions(activity, new PermissionManager.OnPermissionListener() {
+                    @Override
+                    public void onPermission(boolean granted) {
+                        if(granted){
+                            Logc.i("1.requestPermissions.权限成功============" + granted);
+                            SpManager.getInstance().init(activity,"conf");
+                        }else{
+                            Logc.i("1.requestPermissions.权限失败=========" + granted);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -59,6 +86,28 @@ public class DeviceApi {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Logc.i("1.onRequestPermissionsResult============" + requestCode);
         PermissionManager.getInstance().requestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    public void getAllInfo(Bundle writableMap){
+        writableMap.putString("mac", getMac());
+        writableMap.putString("ip", getIp());
+        writableMap.putString("netType", getNetType());
+        writableMap.putString("wifiName", getWiFiName());
+        writableMap.putString("model", getModel());
+        writableMap.putString("brand", getBrand());
+        writableMap.putDouble("rawSize", getRAMSize());
+        writableMap.putDouble("storageMemory", getStorageMemory());
+        writableMap.putDouble("availableStorageMemorySize", getAvailablegetStorageMemorySize());
+        writableMap.putInt("screenWidth", getScreenWidth());
+        writableMap.putInt("screenHeight", getScreenHeight());
+        writableMap.putInt("brightness", getBrightness());
+        writableMap.putInt("volume", getVolume());
+        writableMap.putInt("boottime", getBootTime());
+        writableMap.putBoolean("startup", getStartUp());
+        writableMap.putBoolean("daemon", getDaemon());
+        writableMap.putBoolean("startup", getStartUp());
+        writableMap.putBoolean("sysstable", getSysStable());
+        writableMap.putString("country", getCountry());
     }
 
     public Bundle invoke(final Context c, final Bundle readableMap/*, final Callback callback*/) {
@@ -80,25 +129,7 @@ public class DeviceApi {
         }
         Logc.i(readableMap.toString());
         if (methodName.equalsIgnoreCase("allInfo")) {
-            writableMap.putString("mac", getMac());
-            writableMap.putString("ip", getIp());
-            writableMap.putString("netType", getNetType());
-            writableMap.putString("wifiName", getWiFiName());
-            writableMap.putString("model", getModel());
-            writableMap.putString("brand", getBrand());
-            writableMap.putDouble("rawSize", getRAMSize());
-            writableMap.putDouble("storageMemory", getStorageMemory());
-            writableMap.putDouble("availableStorageMemorySize", getAvailablegetStorageMemorySize());
-            writableMap.putInt("screenWidth", getScreenWidth());
-            writableMap.putInt("screenHeight", getScreenHeight());
-            writableMap.putInt("brightness", getBrightness());
-            writableMap.putInt("volume", getVolume());
-            writableMap.putInt("boottime", getBootTime());
-            writableMap.putBoolean("startup", getStartUp());
-            writableMap.putBoolean("daemon", getDaemon());
-            writableMap.putBoolean("startup", getStartUp());
-            writableMap.putBoolean("sysstable", getSysStable());
-            writableMap.putString("country", getCountry());
+            getAllInfo(writableMap);
         } else if (methodName.equalsIgnoreCase("country")) {
             writableMap.putString("country", getCountry());
         }else if (methodName.equalsIgnoreCase("startup")) {
@@ -152,6 +183,7 @@ public class DeviceApi {
         } else if (methodName.equalsIgnoreCase("shutdown")) {
             shutdown();
         } else if (methodName.equalsIgnoreCase("reboot")) {
+            Logc.e("3.....onReceive");
             reboot();
         } else if (methodName.equalsIgnoreCase("setOnOffTime")) {
             setOnOffTime(readableMap);
@@ -195,12 +227,13 @@ public class DeviceApi {
     public void setSysStable(Boolean status){
         SpManager.getInstance().putBoolean("sysstable",status==null?false:!status);
         if(status){
-            TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    reboot();
-                }
-            });
+//            TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    Logc.e("1.....onReceive");
+//                    reboot();
+//                }
+//            });
         }else{
             TaskManager.getInstance().cancel();
         }
@@ -359,6 +392,14 @@ public class DeviceApi {
     //enable:true 表示设置导航栏显示出来，false表示设置导航栏隐藏掉
     public void setStatusBarVisibility(Boolean status) {
         Logc.i("setStatusBarVisibility " + status);
+    }
+
+    public void gotoWiFi(Activity activity){
+        DeviceHelper.gotoWiFi(activity);
+    }
+
+    public void gotoWigotoLanguageFi(Activity activity){
+        DeviceHelper.gotoLanguage(activity);
     }
 
 }

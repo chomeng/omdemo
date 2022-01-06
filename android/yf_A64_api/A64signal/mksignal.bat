@@ -1,0 +1,1 @@
+java -jar signapk.jar platform.x509.pem platform.pk8 yfA64apitest.apk yfA64apitest_signal.apk

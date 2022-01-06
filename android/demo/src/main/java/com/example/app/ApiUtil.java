@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.api.comm.DeviceApi;
+import com.android.api.util.Logc;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,6 +26,47 @@ public class ApiUtil {
         model = model.toUpperCase();
         String classname = "com.android.api." + model + "Api";
         return classname;
+    }
+
+    public static DeviceApi getApi(final Activity activity){
+        Logc.i("uu_", "OMDeviceModule==init==========");
+//        VolumeManager.getInstance().init(activity, new Handler());
+//        ScreenBrightnessApi.getApi().allowModifySettings(activity);
+        String classname = getClassName();
+        if (classname == null) {
+            Log.i("uu_", "没有找到目标类，初始化失败");
+            return null;
+        }
+        try {
+            Object object = objects.get(classname.toUpperCase());
+            if (object == null) {
+                Class<?> clasz = Class.forName(classname);
+                if (clasz != null) {
+                    Constructor<?> con = clasz.getConstructor(Activity.class);
+                    object = con.newInstance(activity);
+                    objects.put(classname.toUpperCase(), object);
+                }else{
+                    Log.i("uu_", "0初始化失败"+object);
+                }
+            }
+            return (DeviceApi) object;
+        } catch (InstantiationException e) {
+            Log.i("uu_", "1初始化失败"+(e!=null?e.getMessage():""));
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            Log.i("uu_", "2初始化失败"+(e!=null?e.getMessage():""));
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            Log.i("uu_", "3初始化失败"+(e!=null?e.getMessage():""));
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            Log.i("uu_", "4初始化失败"+(e!=null?e.getMessage():""));
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            Log.i("uu_", "5初始化失败"+(e!=null?e.getMessage():""));
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void init(final Activity activity) {

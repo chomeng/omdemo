@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="亮度进度调节"/>
         <SeekBar
-            android:id="@+id/seekBar1"
+            android:id="@+id/sb_brightness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -31,66 +31,129 @@
             android:layout_height="wrap_content"
             android:text="音量进度调节"/>
         <SeekBar
-            android:id="@+id/seekBar2"
+            android:id="@+id/sb_volume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
             android:layout_weight="1"
-            android:onClick="onVolUp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="音量+"/>
-        <Button
-            android:layout_weight="1"
-            android:onClick="onVolDown"
-            android:text="音量-"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_weight="1"
-            android:onClick="onDeviceInfo"
+            android:id="@+id/btn_all_info"
             android:text="设备信息"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
             android:layout_weight="1"
-            android:onClick="onWriteFile"
-            android:text="写文件"
+            android:id="@+id/btn_retation_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_retation_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="90"/>
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_retation_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="180"/>
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_retation_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="270"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_weight="1"
+            android:text="开启屏背光"
+            android:id="@+id/btn_screen_on"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <Button
             android:layout_weight="1"
-            android:onClick="onReadFile"
-            android:text="读文件"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_weight="1"
-            android:onClick="onLuguage"
-            android:text="获取语言"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_weight="1"
-            android:onClick="onTask"
-            android:text="定时"
+            android:id="@+id/btn_screen_off"
+            android:text="关闭屏背光"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_shutdown"
+            android:text="关机"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_reboot"
+            android:text="重启"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btn_wifi"
+            android:text="设置Wi-Fi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_lunguage"
+            android:layout_weight="1"
+            android:text="设置语言"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_weight="1"
+            android:text="test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/text_log"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>
