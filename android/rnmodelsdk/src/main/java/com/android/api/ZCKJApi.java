@@ -1,20 +1,20 @@
 package com.android.api;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.api.comm.DeviceApi;
-import com.example.yf_a64_api.YF_A64_API_Manager;
+import com.zcapi;
 
-public class YF_XXXGApi extends DeviceApi {
-    private YF_A64_API_Manager api = null;
+public class ZCKJApi extends DeviceApi {
+    private zcapi api = null;
 
-    public YF_XXXGApi(Activity act) {
+    public ZCKJApi(Activity act) {
         super(act);
-        api = new YF_A64_API_Manager(act);
+        api = new zcapi();
+        api.getContext(act);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void shutdown() {
         super.shutdown();
         if (api != null) {
-            api.yfShutDown();
+            api.shutDown();
         }
     }
 
@@ -44,7 +44,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void reboot() {
         super.reboot();
         if (api != null) {
-            api.yfReboot();
+            api.reboot();
         }
     }
 
@@ -64,7 +64,7 @@ public class YF_XXXGApi extends DeviceApi {
                     readableMap.getInt("off_day"),
                     readableMap.getInt("off_hour"),
                     readableMap.getInt("off_minute")};
-            api.yfsetOnOffTime(timeonArray, timeoffArray, true);
+            api.setPowetOnOffTime(true,timeonArray, timeoffArray);
         }
     }
 
@@ -72,7 +72,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void setLCDOn() {
         super.setLCDOn();
         if (api != null) {
-            api.yfSetLCDOn();
+            api.setLcdOnOff(true);
         }
     }
 
@@ -80,7 +80,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void setLCDOff() {
         super.setLCDOff();
         if (api != null) {
-            api.yfSetLCDOff();
+            api.setLcdOnOff(false);
         }
     }
 
@@ -88,7 +88,6 @@ public class YF_XXXGApi extends DeviceApi {
     public void setRotation(String degree) {
         super.setRotation(degree);
         if (api != null) {
-            api.yfsetRotation(degree);
         }
     }
 
@@ -96,7 +95,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void setNavigationBarVisibility(Boolean status) {
         super.setNavigationBarVisibility(status);
         if (api != null) {
-            api.yfsetNavigationBarVisibility(status);
+            api.setGestureStatusBar(status);
         }
     }
 
@@ -104,7 +103,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void setStatusBarDisplay(Boolean status) {
         super.setStatusBarDisplay(status);
         if (api != null) {
-            api.yfsetStatusBarDisplay(status);
+            api.setStatusBar(status);
         }
     }
 
@@ -112,7 +111,7 @@ public class YF_XXXGApi extends DeviceApi {
     public void setStatusBarVisibility(Boolean status) {
         super.setStatusBarVisibility(status);
         if (api != null) {
-            api.yfsetStatusBarVisibility(status);
+            api.setStatusBar(status);
         }
     }
 }

@@ -1,20 +1,19 @@
 package com.android.api;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.api.comm.DeviceApi;
-import com.example.yf_a64_api.YF_A64_API_Manager;
+import com.example.yf_rk3288_api.YF_RK3288_API_Manager;
 
-public class YF_XXXGApi extends DeviceApi {
-    private YF_A64_API_Manager api = null;
+public class YF_RK3288Api extends DeviceApi {
+    private YF_RK3288_API_Manager api = null;
 
-    public YF_XXXGApi(Activity act) {
+    public YF_RK3288Api(Activity act) {
         super(act);
-        api = new YF_A64_API_Manager(act);
+        api = new YF_RK3288_API_Manager(act);
     }
 
     @Override

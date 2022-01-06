@@ -1,4 +1,4 @@
-package com.android.api;
+package com.android.api.comm;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,14 +16,12 @@ import com.android.api.util.ScreenBrightnessApi;
 import com.android.api.util.SpManager;
 import com.android.api.util.TaskManager;
 import com.android.api.util.VolumeManager;
-import com.example.yf_a64_api.YF_A64_API_Manager;
 
-public class MI9Api{
-    private Context context;
-    private Activity activity;
-    private YF_A64_API_Manager yfapi = null;
+public class DeviceApi {
+    protected Context context;
+    protected Activity activity;
 
-    public MI9Api(Activity act) {
+    public DeviceApi(Activity act) {
         Logc.i("1.构造============202201051343" + act);
         this.activity = act;
         if (activity != null) {
@@ -40,12 +38,11 @@ public class MI9Api{
                     ScreenBrightnessApi.getApi().allowModifySettings(activity);
                 }
             });
-            yfapi = new YF_A64_API_Manager(activity);
             if(getSysStable()){
                 TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        yfapi.yfReboot();
+                        reboot();
                     }
                 });
             }else{
@@ -195,6 +192,20 @@ public class MI9Api{
         return writableMap;
     }
 
+    public void setSysStable(Boolean status){
+        SpManager.getInstance().putBoolean("sysstable",status==null?false:!status);
+        if(status){
+            TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    reboot();
+                }
+            });
+        }else{
+            TaskManager.getInstance().cancel();
+        }
+    }
+
     public boolean getSysStable(){
         return !SpManager.getInstance().getBoolean("sysstable");
     }
@@ -305,101 +316,49 @@ public class MI9Api{
 
 
     public void shutdown() {
-        if (yfapi != null) {
             Logc.i("shutdown ");
-            yfapi.yfShutDown();
-        }
     }
 
     public void reboot() {
-        if (yfapi != null) {
-            Logc.i("reboot ");
-            yfapi.yfReboot();
-        }
+        Logc.i("reboot");
     }
 
     //设置系统开关机时间（设置的时间必须比当前时间大于3分钟，开机时间间隔大
     public void setOnOffTime(final Bundle readableMap) {
-        if (yfapi != null) {
-            Logc.i("setOnOffTime ");
-            int[] timeonArray = {
-                    readableMap.getInt("on_year"),
-                    readableMap.getInt("on_month"),
-                    readableMap.getInt("on_day"),
-                    readableMap.getInt("on_hour"),
-                    readableMap.getInt("on_minute")};
-            int[] timeoffArray = {
-                    readableMap.getInt("off_year"),
-                    readableMap.getInt("off_month"),
-                    readableMap.getInt("off_day"),
-                    readableMap.getInt("off_hour"),
-                    readableMap.getInt("off_minute")};
-            yfapi.yfsetOnOffTime(timeonArray, timeoffArray, true);
-        }
+        Logc.i("setOnOffTime ");
     }
 
     public void setLCDOn() {
-        if (yfapi != null) {
-            Logc.i("setLCDOff ");
-            yfapi.yfSetLCDOn();
-        }
+        Logc.i("setLCDOff ");
     }
 
     //关闭屏背光函数，调用直接关闭屏背光
     public void setLCDOff() {
-        if (yfapi != null) {
-            Logc.i("setLCDOff ");
-            yfapi.yfSetLCDOff();
-        }
+        Logc.i("setLCDOff ");
     }
 
     //设置系统旋转角度显示的接口，（调用以后自动重启生效）
     //Degree:可以有4种值（"0"，"90"，"180"，"270"），其他值默认为和"0"一样的处理方式
     public void setRotation(String degree) {
-        if (yfapi != null) {
-            Logc.i("setRotation " + degree);
-            yfapi.yfsetRotation(degree);
-        }
+        Logc.i("setRotation " + degree);
     }
 
     //设置按键导航栏的隐藏和显示
     //enable:true 表示设置导航栏显示出来，false表示设置导航栏隐藏掉z
     public void setNavigationBarVisibility(Boolean status) {
-        if (yfapi != null) {
-            Logc.i("setNavigationBarVisibility " + status);
-            yfapi.yfsetNavigationBarVisibility(status);
-        }
+        Logc.i("setNavigationBarVisibility " + status);
     }
 
     //设置系统是否有状态栏显示出来,设置以后自动重启生效。
     //enable:true 表示设置导航栏显示出来，false表示设置导航栏不显示，包括其占有的位置
     public void setStatusBarDisplay(Boolean status) {
-        if (yfapi != null) {
-            Logc.i("setStatusBarDisplay " + status);
-            yfapi.yfsetStatusBarDisplay(status);
-        }
+        Logc.i("setStatusBarDisplay " + status);
     }
 
     //设置系统是否有状态栏显示还是隐藏，隐藏的时候还会占用位置，不用重启生效
     //enable:true 表示设置导航栏显示出来，false表示设置导航栏隐藏掉
     public void setStatusBarVisibility(Boolean status) {
-        if (yfapi != null) {
-            Logc.i("setStatusBarVisibility " + status);
-            yfapi.yfsetStatusBarVisibility(status);
-        }
+        Logc.i("setStatusBarVisibility " + status);
     }
 
-    public void setSysStable(Boolean status){
-        SpManager.getInstance().putBoolean("sysstable",status==null?false:!status);
-        if(status){
-            TaskManager.getInstance().setAlarm(activity, new AlarmReceiver.OnAlarmReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    yfapi.yfReboot();
-                }
-            });
-        }else{
-            TaskManager.getInstance().cancel();
-        }
-    }
 }
