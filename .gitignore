@@ -42,6 +42,16 @@ buck-out/
 *.keystore
 !debug.keystore
 
+__tests__
+.buckconfig
+.editorconfig
+.eslintrc.js
+.flowconfig
+.gitattributes
+.prettierrc.js
+.watchmanconfig
+yarn.lock
+
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
